@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#inspired by zsecurity's Python Ethical Hacking course
 
 #LIBRARIES
 import subprocess
