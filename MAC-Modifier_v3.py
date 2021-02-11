@@ -1,11 +1,10 @@
 #!/usr/bin/python
+#inspired by zsecurity's Python Ethical Hacking course
 
 #LIBRARIES
 import subprocess
 import optparse
 import re
-
-#OPTION PARSER
 
 #HEADER
 print("\n.\n.\n.\n\nCCONN MAC Address Modifier v.3\n\nThis tool can \
@@ -13,17 +12,9 @@ be used to modify the MAC address of any interface on your host. This\
  program was written in Python for Linux/Unix systems, and requires you\
  to use sudo or root priviledges to function correctly.\n")
 
-#dev-notes: you can use Windows by changing all instances of ifconfig \
-#to ipconfig, and running the program as Administrator
-
-#old//dev-notes: you can use Python 3 by switching 'raw_input' to 'input'
-#'raw input' removes the trailing new line
-
 print("\n[+] Your current network settings are as follows -\n")
 subprocess.call(["ifconfig"])
 print("\n")
-
-#VARIABLES
 
 #MAIN FUNCTIONS
 def GetArgs():
@@ -53,15 +44,23 @@ def CheckModifiedMac(interface):
    else:
        print("[-] Could not read MAC address")
 
-#dev-notes: by using [brackets] to LIST the entire command argument 
-#rather than using '+', you make the script more secure, by not 
-#allowing the user to inject additional commands with ';'. This avoids
-#shell=True, a known security hazard
-
-options = GetArgs()
+     options = GetArgs()
 
 ChangeMac(options.interface, options.new_mac)
 
 modified_mac = CheckModifiedMac(options.interface)
 
 print("\n[+] Modified MAC = " + str(modified_mac))
+
+#dev-notes: by using [brackets] to LIST the entire command argument 
+#rather than using '+', you make the script more secure, by not 
+#allowing the user to inject additional commands with ';'. This avoids
+#shell=True, a known security hazard (lines 16, 35-38)
+
+#dev-notes: you can use Windows by changing all instances of ifconfig 
+#to ipconfig, and running the program as Administrator
+
+#old//dev-notes: you can use Python 3 by switching 'raw_input' to 'input'
+#'raw input' removes the trailing new line (instead options are given at
+#the command line when the program is exectuted, rather than the program
+#requesting user input at run time)
