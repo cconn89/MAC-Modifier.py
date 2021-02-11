@@ -1,25 +1,31 @@
 #!/usr/bin/python
-#inspired by zsecurity's Python Ethical Hacking course
 
 #LIBRARIES
 import subprocess
-import optparser
+import optparse
+import re
 
-#dev-notes: sub process allows us to execute system commands from our script,
-#such as ifconfig. optparser allows us to use command line arguments when
-#excecuting our script.
+#OPTION PARSER
 
 #HEADER
 print("\n.\n.\n.\n\nCCONN MAC Address Modifier v.3\n\nThis tool can \
 be used to modify the MAC address of any interface on your host. This\
  program was written in Python for Linux/Unix systems, and requires you\
  to use sudo or root priviledges to function correctly.\n")
-print("\nYour current network settings are as follows -")
+
+#dev-notes: you can use Windows by changing all instances of ifconfig \
+#to ipconfig, and running the program as Administrator
+
+#old//dev-notes: you can use Python 3 by switching 'raw_input' to 'input'
+#'raw input' removes the trailing new line
+
+print("\n[+] Your current network settings are as follows -\n")
 subprocess.call(["ifconfig"])
+print("\n")
 
 #VARIABLES
 
-#MAIN
+#MAIN FUNCTIONS
 def GetArgs():
     parser = optparse.OptionParser()
     parser.add_option("-i", "--interface", dest="interface", help="Select i\
@@ -39,15 +45,23 @@ def ChangeMac(interface, new_mac):
     subprocess.call(["ifconfig", interface, "hw", "ether", new_mac])
     subprocess.call(["ifconfig", interface, "up"])
 
-#dev-notes: by using [brackets] to LIST the entire command argument rather
-#than using '+', you make the script more secure, by not allowing the user
-#to inject additional commands with ';'. This avoids shell=True, a known
-#security hazard
+def CheckModifiedMac(interface):
+   ifconfig_result = subprocess.check_output(["ifconfig", options.interface])
+   modified_mac = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", ifconfig_result)
+   if modified_mac:
+       return modified_mac.group(0)
+   else:
+       print("[-] Could not read MAC address")
+
+#dev-notes: by using [brackets] to LIST the entire command argument 
+#rather than using '+', you make the script more secure, by not 
+#allowing the user to inject additional commands with ';'. This avoids
+#shell=True, a known security hazard
 
 options = GetArgs()
+
 ChangeMac(options.interface, options.new_mac)
 
-#//END OF PROGRAM//
-#OUTDATED-dev-notes: you can use Python 3 simply by switching 'raw_input' to 'input'
-#'raw_input' removes the trailing new line // this was relevant before I switched to
-#optparser command line options
+modified_mac = CheckModifiedMac(options.interface)
+
+print("\n[+] Modified MAC = " + str(modified_mac))
