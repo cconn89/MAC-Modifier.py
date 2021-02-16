@@ -6,9 +6,12 @@ import subprocess
 import optparse
 import re
 
+#dev-note: optparse has been depreciated by argparse, consider implementing
+#in future revision
+
 #HEADER
 print("\n.\n.\n.\n\nCCONN MAC Address Modifier v.3\n\nThis tool can \
-be used to modify the MAC address of any interface on your host. This\
+be used to modify the MAC address of any network interface on your host. This\
  program was written in Python for Linux/Unix systems, and requires you\
  to use sudo or root priviledges to function correctly.\n")
 
@@ -55,12 +58,12 @@ print("\n[+] Modified MAC = " + str(modified_mac))
 #dev-notes: by using [brackets] to LIST the entire command argument 
 #rather than using '+', you make the script more secure, by not 
 #allowing the user to inject additional commands with ';'. This avoids
-#shell=True, a known security hazard (lines 16, 35-38)
+#usage of shell=True, a known security hazard (lines 37-40)
 
 #dev-notes: you can use Windows by changing all instances of ifconfig 
 #to ipconfig, and running the program as Administrator
 
-#old//dev-notes: you can use Python 3 by switching 'raw_input' to 'input'
-#'raw input' removes the trailing new line (instead options are given at
+#old//dev-notes: you can use Python 3 by switching 'raw_input' to 'input'.
+#'raw input' removes the trailing new line (now options are given at
 #the command line when the program is exectuted, rather than the program
 #requesting user input at run time)
